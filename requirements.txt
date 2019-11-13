@@ -1,0 +1,2 @@
+Django==2.2.7
+python-barcode==0.10.0
