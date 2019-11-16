@@ -14,6 +14,7 @@
   </head>
 
   <body>
+    {% block navbar %}
     <nav class="navbar navbar-expand-lg navbar-dark" style='background-color:#08090A;'>
       <a class="navbar-brand" href="#" style='color: yellow;'> GATEKEEPER </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,7 +44,7 @@
         </form>
       </div>
     </nav>
-
+    {% endblock navbar %}
   <div class='container'>
 
     {% block content %}

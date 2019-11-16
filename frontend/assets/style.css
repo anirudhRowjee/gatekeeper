@@ -1,4 +1,7 @@
 /* palette https://coolors.co/9bbec7-08090a-f4f7f5-575a5e-222823 */
 body {
-    background-color: #7C9EB2;
-}    
+    background-color: #7c9eb2;
+}
+.header {
+    font-size: 3em;
+}
