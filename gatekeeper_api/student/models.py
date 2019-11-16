@@ -47,5 +47,6 @@ class StudentAdder(models.Model):
                 successes += 1
             except IntegrityError:
                 print("student {dump} already exists".format(dump=student))
-         message =  "{successes} out of {total} students successfully added"
-         return message.format(successes = successes, total = total)
+
+        message =  "{successes} out of {total} students successfully added"
+        return message.format(successes = successes, total = total)
