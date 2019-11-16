@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block navbar %}
+{% endblock navbar %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="mx-auto m-3">
+        <center><p class="header">Register</p></center>
+    </div>
+    <div class="register-form w-50 mx-auto">
+        <form action="#" method="post">
+            <p class="form-text text-muted">Guest Details</p>
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" name="name" id="name" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="email">Email ID:</label>
+                <input
+                    type="email"
+                    name="email"
+                    id="email"
+                    class="form-control"
+                />
+            </div>
+            <div class="form-group">
+                <label for="phone-number">Phone Number:</label>
+                <input
+                    type="number"
+                    name="phone-number"
+                    id="phone-number"
+                    class="form-control"
+                />
+            </div>
+            <p class="form-text text-muted">Guest-Of Details</p>
+            <div class="form-group">
+                <label for="guest-of-name">Name:</label>
+                <input
+                    type="text"
+                    name="guest-of-name"
+                    id="guest-of-name"
+                    class="form-control"
+                />
+            </div>
+            <div class="form-group">
+                <label for="guest-of-phone-number">Phone Number:</label>
+                <input
+                    type="number"
+                    name="guest-of-phone-number"
+                    id="guest-of-phone-number"
+                    class="form-control"
+                />
+            </div>
+            <div class="form-group">
+                <label for="admission-no">Admission Number:</label>
+                <input
+                    type="text"
+                    name="admission-no"
+                    id="admission-no"
+                    class="form-control"
+                />
+            </div>
+            <center>
+                <button type="submit" class="btn btn-success m-3">
+                    Submit
+                </button>
+            </center>
+        </form>
+    </div>
+</div>
+{% endblock content %}
+
