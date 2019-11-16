@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block navbar %}
+{% endblock navbar %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="add-students-form w-50 mx-auto">
+        <div class="mx-auto m-3">
+            <center><p class="header">Add students</p></center>
+        </div>
+        <form action="#" method="post">
+            <div class="form-group">
+                <label for="students-csv">Upload csv file: </label>
+                <small class="form-text text-muted">
+                    CSV should contain records of students in the order
+                    of - Admission Number, Name
+                </small>
+                <input
+                    type="file"
+                    name="students-csv"
+                    id="students-csv"
+                    class="mt-5 mb-5"
+                />
+            </div>
+            <center>
+                <button type="submit" class="btn btn-success">
+                    Add students
+                </button>
+            </center>
+        </form>
+    </div>
+</div>
+{% endblock content %}

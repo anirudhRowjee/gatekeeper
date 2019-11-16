@@ -1,0 +1,28 @@
+/* WORKING CSS FILE */
+
+/* palette https://coolors.co/9bbec7-08090a-f4f7f5-575a5e-222823 */
+body {
+    background-color: #000000; 
+    color: yellow;
+    font-family: 'Roboto', sans-serif;
+}
+
+.text-logo{
+    color: black;
+}
+
+.header{
+    color: yellow;
+}
+
+.navbar-custom{
+    background-color: #6320EE;
+    margin: 1%;
+    border-radius: 5px;
+}
+
+.custom-form{
+    background-color: white;
+    color: black;
+    padding: 10%;
+}

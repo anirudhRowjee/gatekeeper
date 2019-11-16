@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block navbar %}
+{% endblock navbar %}
+
+{% block content %}
+    <div class="mx-auto m-3">
+        <center><p class="header">Guest Check In</p></center>
+    </div>
+    <div class="w-50 mx-auto m-5">
+        <form action="#" method="post">
+            <div class="form-group">
+                <label for="id">Scan the barcode:</label>
+                <input type="text" name="" id="id" class="form-control" />
+                <small class="form-text text-muted">
+                    Scan the barcode to get the information about guest to
+                    confim.
+                </small>
+            </div>
+            <center>
+                <button type="submit" class="btn btn-success">
+                    Check-In Guest
+                </button>
+            </center>
+        </form>
+    </div>
+    <div class="card info-card w-50 mx-auto m-5">
+        <div class="card-header">
+            Guest Info:
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                Name:
+                <p id="guest-name">Name Comes Here</p>
+            </li>
+            <li class="list-group-item">
+                Guest Of :
+                <p id="guest-of-name">Guest Of Name Comes Here</p>
+            </li>
+            <li class="list-group-item">
+                Email ID of guest:
+                <p id="guest-email">Email Comes Here</p>
+            </li>
+        </ul>
+    </div>
+{% endblock content %}
+
