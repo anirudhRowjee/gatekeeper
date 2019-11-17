@@ -2,27 +2,30 @@
 
 /* palette https://coolors.co/9bbec7-08090a-f4f7f5-575a5e-222823 */
 body {
-    background-color: #000000; 
-    color: yellow;
-    font-family: 'Roboto', sans-serif;
+    background-color: #000000;
+    color: #f4f7f5;
+    font-family: "Roboto", sans-serif;
 }
 
-.text-logo{
+.text-logo {
     color: black;
 }
 
-.header{
-    color: yellow;
+.header {
+    color: #6320ee;
+    font-size: 4em;
+    margin: 2vw;
 }
 
-.navbar-custom{
-    background-color: #6320EE;
+.navbar-custom {
+    background-color: #2d0f6d;
+    color: #f4f7f5;
     margin: 1%;
     border-radius: 5px;
 }
 
-.custom-form{
-    background-color: white;
-    color: black;
+.custom-form {
+    background-color: black;
+    color: #f4f7f5;
     padding: 10%;
 }
