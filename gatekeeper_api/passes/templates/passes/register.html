@@ -38,6 +38,7 @@
     </div>
     <div class="register-form w-50 mx-auto">
         <form action="#" class='custom-form' method="post">
+            {% csrf_token %}
             <center><h3 class="form-text">Guest Details</h3></center>
             <div class="form-group">
                 <label for="name">Name:</label>
@@ -64,8 +65,8 @@
             <div class="form-group">
                 <label for="event-date">Date:</label>
                 <select name="event-date" id="event-date" class="form-control" required>
-                  {% for date in dates.items %}
-                  <option value="{{date}}">{{date}}</option>
+                  {% for datename, dateid in dates.items %}
+                  <option value="{{dateid}}">{{datename}}</option>
                   {% endfor %}
                 </select>
             </div>

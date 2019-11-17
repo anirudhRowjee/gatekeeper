@@ -17,3 +17,4 @@ class guestPass(models.Model):
     def __str__(self):
         datastr = "{guestname} - guest of {student}".format(guestname=self.guestname,
                                                             student = self.guest_of.name)
+        return datastr

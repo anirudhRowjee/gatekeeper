@@ -32,7 +32,7 @@
                 <a class="nav-link" href="#"> Dates </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link active" href="#"> Students </a>
+                <a class="nav-link" href="#"> Students </a>
             </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">
@@ -47,27 +47,33 @@
 {% block content %}
 <div class="add-students-form w-50 mx-auto">
     <div class="mx-auto m-3">
-        <center><p class="header">Add students</p></center>
+        <center><p class="header">Add Event</p></center>
     </div>
     <form action="#" method="post" enctype="multipart/form-data">
       {% csrf_token %}
         <div class="form-group">
-            <label for="students-csv">Upload csv file: </label>
-            <small class="form-text text-muted">
-                CSV should contain records of students in the order of -
-                Admission Number, Name, Class
-            </small>
+            <label for="name">Name of event: </label>
             <input
-                type="file"
-                name="students-csv"
-                id="students-csv"
-                class="form-control-file mt-5 mb-5 for"
+                type="text"
+                name="name"
+                id="name"
+                class="form-control"
+                required
+            >
+        </div>
+        <div class="form-group">
+            <label for="date">Date of event: </label>
+            <input
+                type="date"
+                name="date"
+                id="date"
+                class="form-control"
                 required
             >
         </div>
         <center>
             <button type="submit" class="btn btn-success">
-                Add students
+                Add Event
             </button>
         </center>
     </form>
