@@ -18,9 +18,18 @@ def AddStudents(request):
         csv_file = request.FILES['students-csv']
         uid = get_unique_id()
         adder = student.StudentAdder(
-            uid=uid, filename=str(uid), file=csv_file)
+            uid=uid,
+            filename=str(uid),
+            file=csv_file)
         adder.save()
-        adder.addStudents()
+        message = adder.addStudents()
+        print("message ", message)
+        message_actual = message[0]
+        if message[1] == True:
+            status = 'OK'
+        if message[1] == False:
+            status = 'NO'
+        return render(request, "student/addstudents.html", {'message':message_actual, 'status':status })
 
     else:
         return render(request, "student/addstudents.html")

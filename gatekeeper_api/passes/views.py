@@ -14,7 +14,7 @@ def normalize_students(queryset):
 
 def normalize_dates(queryset):
     # function to accept queryset and convert to JSON
-    return {date: str(date.id) for date in queryset}
+    return {str(date): str(date.id) for date in queryset}
 
 
 def register(request):

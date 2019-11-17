@@ -70,11 +70,18 @@
             </button>
         </center>
     </form>
-    {% if error %}
+    {% if message %}
+    <br>
     <center>
-        <div class="alert alert-danger" role="alert">
-            {{error}}
+        {% if status == "OK" %}
+        <div class="alert alert-success" role="alert">
+            {{message}}
         </div>
+        {% elif status == "NO" %}
+        <div class="alert alert-danger" role="alert">
+            {{message}}
+        </div>
+        {% endif %}
     </center>
     {% endif %}
 </div>

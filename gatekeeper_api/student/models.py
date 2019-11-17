@@ -23,15 +23,20 @@ class StudentAdder(models.Model):
 
     def getFileDump(self):
         # get dump from CSV file in JSON
-        dump = {}
+        dump = []
         mainfile_path = self.file.path
         with open(mainfile_path) as data:
             reader = csv.reader(data, delimiter=',')
             for row in reader:
-                uid, name, student_class = row[0], row[1], row[2]
+                print(row)
+                uid = row[0]
+                name = row[1]
+                student_class = row[2]
                 new = {'uid': uid, 'name': name,
                        'student_class': student_class}
-                dump.update(new)
+                print("new, ", new)
+                dump.append(new)
+        print("Student file dump", dump)
         return dump
 
     def addStudents(self):
@@ -39,17 +44,19 @@ class StudentAdder(models.Model):
         dataset = self.getFileDump()
         successes = 0
         total = len(dataset)
+        print("processed dump", dataset)
         for student_data in dataset:
             try:
-                new = student.objects.get_or_create(
+                new = student(
                     name=student_data['name'],
-                    uid=student_data['uid'],
+                    unique_id=student_data['uid'],
                     student_class=student_data['student_class']
                 )
+                new.save()
                 successes += 1
             except IntegrityError:
-                print("student {dump} already exists".format(
-                    dump=student_data))
+                message = "There is Duplicate Student Data!"
+                return [message, False]
 
         message = "{successes} out of {total} students successfully added"
-        return message.format(successes=successes, total=total)
+        return [message.format(successes=successes, total=total), True]
