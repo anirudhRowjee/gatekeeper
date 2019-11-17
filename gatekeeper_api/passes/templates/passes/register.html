@@ -55,19 +55,17 @@
             </div>
             <div class="form-group">
                 <label for="admission-no">Admission Number:</label>
-                <input
-                    type="text"
-                    name="admission-no"
-                    id="admission-no"
-                    class="form-control"
-                    required
-                />
+                <select name="uid" id="admission-no" class="form-control selectpicker" data-live-search="true" required>
+                  {% for searchstr, student in students.items %}
+                    <option value="{{student}}"> {{ searchstr }} </option>
+                  {% endfor %}
+                </select>
             </div>
             <div class="form-group">
                 <label for="event-date">Date:</label>
                 <select name="event-date" id="event-date" class="form-control" required>
-                  {% for date in dates %}
-                  <option value="{{date.id}}">lol</option>
+                  {% for date in dates.items %}
+                  <option value="{{date}}">{{date}}</option>
                   {% endfor %}
                 </select>
             </div>

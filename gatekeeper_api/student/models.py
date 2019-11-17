@@ -1,7 +1,8 @@
 from django.db import models
 from django.db import IntegrityError
-
+import csv
 # Create your models here.
+
 
 class student(models.Model):
 
@@ -22,31 +23,33 @@ class StudentAdder(models.Model):
 
     def getFileDump(self):
         # get dump from CSV file in JSON
-        data = {}
+        dump = {}
         mainfile_path = self.file.path
         with open(mainfile_path) as data:
             reader = csv.reader(data, delimiter=',')
             for row in reader:
                 uid, name, student_class = row[0], row[1], row[2]
-                new = {'uid':uid, 'name':name, 'student_class':student_class}
-                data += new
-        return data
+                new = {'uid': uid, 'name': name,
+                       'student_class': student_class}
+                dump.update(new)
+        return dump
 
     def addStudents(self):
         # add students from JSON data dump
         dataset = self.getFileDump()
         successes = 0
         total = len(dataset)
-        for student in dataset:
+        for student_data in dataset:
             try:
                 new = student.objects.get_or_create(
-                        name = student['name'],
-                        uid = student['uid'],
-                        student_class = student['student_class']
-                        )
+                    name=student_data['name'],
+                    uid=student_data['uid'],
+                    student_class=student_data['student_class']
+                )
                 successes += 1
             except IntegrityError:
-                print("student {dump} already exists".format(dump=student))
+                print("student {dump} already exists".format(
+                    dump=student_data))
 
-        message =  "{successes} out of {total} students successfully added"
-        return message.format(successes = successes, total = total)
+        message = "{successes} out of {total} students successfully added"
+        return message.format(successes=successes, total=total)
