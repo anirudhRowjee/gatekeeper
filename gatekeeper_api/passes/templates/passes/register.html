@@ -2,50 +2,82 @@
 
 {% block navbar %}
 <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
-  <a class="navbar-brand text-logo" href="#"> GATEKEEPER </a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-                                                                                                                                                                                                         
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="#"> Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#"> Register </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#"> Validate </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#"> Dates </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#"> Students  </a>
-      </li>
-    </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <button class="btn btn-danger my-2 my-sm-0" type="submit"> logout </button>
-    </form>
-  </div>
+    <a class="navbar-brand text-logo" href="#"> GATEKEEPER </a>
+    <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+    >
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    Home <span class="sr-only">(current)</span></a
+                >
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'pass_register' %}"> Register </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#"> Validate </a>
+            </li>
+            <li class="nav-item " >
+                <a class="nav-link" href="{% url 'addevent' %}"> Dates </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'addstudents' %}"> Students </a>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+            <button class="btn btn-danger my-2 my-sm-0" type="submit">
+                logout
+            </button>
+        </form>
+    </div>
 </nav>
 {% endblock navbar %}
 
 {% block content %}
-    <div class="mx-auto m-3">
-        <center><h1 class='header'> REGISTER </h1> </center>
+    <div class="mx-auto m-2">
+        <center><h3 class='header'> REGISTER </h3> </center>
     </div>
+
+
+        {% if message %}
+        {% if status == 'OK' %}
+        <center>
+            <div class="alert alert-dismissable alert-success" id='alert-spec' role="alert">
+                <a href="#" class="close"  data-dismiss="alert">&times;</a>
+                {{ message }}
+            </div>
+        </center>
+        {% elif status == 'NO' %}
+        <center>
+            <div class="alert alert-dismissable alert-danger" id='alert_spec' role="alert">
+                <a href="#" class="close"  data-dismiss="alert">&times;</a>
+                {{ message }}
+            </div>
+        </center>
+        {% endif %}
+        {% endif %}
+
     <div class="register-form w-50 mx-auto">
         <form action="#" class='custom-form' method="post">
             {% csrf_token %}
-            <center><h3 class="form-text">Guest Details</h3></center>
+            <center><h3 class="form-text"> New Guest Pass </h3></center>
             <div class="form-group">
-                <label for="name">Name:</label>
+                <label for="name"> Guest Name:</label>
                 <input type="text" name="name" id="name" class="form-control" required/>
             </div>
             <div class="form-group">
-                <label for="email">Email ID:</label>
+                <label for="email"> Guest Email ID:</label>
                 <input
                     type="email"
                     name="email"
@@ -55,7 +87,7 @@
                 />
             </div>
             <div class="form-group">
-                <label for="admission-no">Admission Number:</label>
+                <label for="admission-no">Guest Of Student :</label>
                 <select name="uid" id="admission-no" class="form-control selectpicker" data-live-search="true" required>
                   {% for searchstr, student in students.items %}
                     <option value="{{student}}"> {{ searchstr }} </option>
@@ -63,7 +95,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="event-date">Date:</label>
+                <label for="event-date">Event:</label>
                 <select name="event-date" id="event-date" class="form-control" required>
                   {% for datename, dateid in dates.items %}
                   <option value="{{dateid}}">{{datename}}</option>
@@ -71,18 +103,20 @@
                 </select>
             </div>
             <center>
-                <button type="submit" class="btn btn-outline-success m-3">
-                    Submit
+                <button type="submit btn-block" class="btn btn-outline-success m-3">
+                    Register Guest Pass
                 </button>
             </center>
         </form>
-        {% if error %}
-        <center>
-            <div class="alert alert-danger" role="alert">
-                {{error}}
-            </div>
-        </center>
-        {% endif %}
     </div>
 {% endblock content %}
 
+{% block script %}
+<script>
+$(document).ready(function(){
+  $(".close").click(function(){
+    $("#alert_spec").alert("close");
+  });
+});
+</script>
+{% endblock script %}

@@ -25,7 +25,8 @@ SECRET_KEY = 'ahkz-)kgo@d+f6pc*_$3#crtq1mz5pwanmpov1b*gelgmiedpc'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '*', '172.16.3.140']
+
 
 
 # Application definition
@@ -126,3 +127,12 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), '/gatekeeper_api/static/as
 # media settings
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+# MAIL Settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'fisannualday@gmail.com'
+EMAIL_HOST_PASSWORD = 'k@und1r0wj33'

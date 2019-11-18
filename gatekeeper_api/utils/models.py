@@ -1,5 +1,6 @@
 from django.db import models
 import barcode as barcode_lib
+from barcode.writer import ImageWriter
 from django.conf import settings
 from PIL import Image
 from django.core.files import File
@@ -9,7 +10,7 @@ from django.core.files import File
 def get_code128_barcode(instr):
     # returns a barcode image object
     code128 = barcode_lib.get_barcode_class('code128')
-    barcode_object = code128(instr)
+    barcode_object = code128(instr, writer=ImageWriter())
     return barcode_object
 
 

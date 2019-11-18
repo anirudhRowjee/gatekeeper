@@ -13,8 +13,8 @@ body {
 
 .header {
     color: #6320ee;
-    font-size: 4em;
-    margin: 2vw;
+    font-size: 3em;
+    margin: 0.5vw;
 }
 
 .navbar-custom {
@@ -27,5 +27,7 @@ body {
 .custom-form {
     background-color: black;
     color: #f4f7f5;
-    padding: 10%;
+    padding: 5%;
 }
+
+#TODO update menubar
