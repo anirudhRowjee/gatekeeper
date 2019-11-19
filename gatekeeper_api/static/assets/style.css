@@ -30,4 +30,6 @@ body {
     padding: 5%;
 }
 
-#TODO update menubar
+.success_item{
+    border: 5px solid green;
+}
