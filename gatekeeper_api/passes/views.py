@@ -1,3 +1,4 @@
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from . import models as passes
 from student import models as student
@@ -7,6 +8,8 @@ from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import send_mail, EmailMessage
 from django.conf import settings
+from django.forms.models import model_to_dict
+from django.shortcuts import render_to_response
 
 
 def normalize_students(queryset):
@@ -127,3 +130,18 @@ def register(request):
 
 def validate(request):
     return render(request, 'passes/checkin.html')
+
+
+def get_guest_info(request):
+    if request.method == "POST":
+        uid = request.POST['uid']
+        print(uid)
+        barcode = utils.barcode.objects.get(
+            uid=uid)
+        guestpass = passes.guestPass.objects.get(barcode=barcode)
+        student_id = guestpass.guest_of.id
+        studentdata = student.student.objects.get(id=student_id)
+        data = model_to_dict(studentdata)
+        data.update(model_to_dict(guestpass))
+        print(data)
+        return JsonResponse(data)

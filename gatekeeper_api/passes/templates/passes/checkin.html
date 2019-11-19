@@ -41,8 +41,8 @@
     </div>
     <div class="row">
       <div class="w-50 col m-5">
-          <form action="#" method="post" id="check-guest-info">
-            {% crsftoken %}
+          <form id="check-guest-info">
+              {% csrf_token %}
               <center>
               <video id="preview" class='' width=300 height=200></video>
               </center>
@@ -65,22 +65,6 @@
           <div class="card-header">
               Guest Info:
           </div>
-          {% if guestpass %}
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item">
-                  Name:
-                  <p id="guest-name">{{ guestpass.guestname }}</p>
-              </li>
-              <li class="list-group-item">
-                  Guest Of :
-                  <p id="guest-of-name">{{ guestpass.guest_of.name}} - {{ guestpass.guest_of.student_class}}</p>
-              </li>
-              <li class="list-group-item">
-                  Email ID of guest:
-                  <p id="guest-email">{{ guestpass.email}}</p>
-              </li>
-            </ul>
-          {% else %}
             <ul class="list-group list-group-flush">
               <li class="list-group-item">
                   Name:
@@ -95,7 +79,6 @@
                   <p id="guest-email">---</p>
               </li>
             </ul>
-          {% endif %}
       </div>
     </div>
     {% if error %}
@@ -105,6 +88,32 @@
         </div>
     </center>
     {% endif %}
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    
+    <script type="text/javascript">
+
+    $(document).on('submit', '#check-guest-info', function(e){
+        e.preventDefault();
+
+        $.ajax({
+            type:'POST',
+            url:'check',
+            data:{
+              uid: $('#uid').val(),
+              csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success:function(data){
+              $('#guest-name').text(data.guestname);
+              $('#guest-of-name').text(data.name);
+              $('#guest-email').text(data.email);
+            }
+        })
+
+      });
+
+
+    </script>
     <script type="text/javascript" src="https://rawcdn.githack.com/tobiasmuehl/instascan/4224451c49a701c04de7d0de5ef356dc1f701a93/bin/instascan.min.js"></script>
     <script type="text/javascript">
       let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
@@ -123,10 +132,7 @@
         console.error(e);
       });
 
-      
-
-
-    </script>
+      </script>
 
 {% endblock content %}
 
