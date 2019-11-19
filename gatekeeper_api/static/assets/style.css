@@ -30,6 +30,21 @@ body {
     padding: 5%;
 }
 
-.success_item{
-    border: 5px solid green;
+.success_item {
+    border: 5px solid rgb(48, 255, 48);
+}
+
+.info-card {
+    background-color: black;
+    border: 2px solid #6320ee;
+}
+
+.list-group-item {
+    background-color: black;
+    border: 1px solid #6320ee;
+}
+
+.card-header {
+    background-color: black;
+    border-bottom: 1px solid #6320ee;
 }

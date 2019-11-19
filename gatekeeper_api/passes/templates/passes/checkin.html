@@ -34,75 +34,99 @@
 
 {% block content %}
 
-    <div class="mx-auto m-3">
-        <center><p class="header">Guest Check In</p></center>
+    <div class="row">
+      <div class="mx-auto m-3">
+          <center><p class="header">Guest Check In</p></center>
+      </div>
     </div>
-    <div class="w-50 mx-auto m-5">
-        <form action="#" method="post">
-            <center>
-            <video id="preview" class='' width=300 height=200></video>
-            </center>
-            <div class="form-group">
-                <label for="id">Scan the QR Code:</label>
-                <input type="text" name="" id="id" class="form-control" />
-                <small class="form-text text-muted">
-                    Scan the QR code to get the information about guest to
-                    confirm.
-                </small>
-            </div>
-            <center>
-                <button type="submit" class="btn btn-success">
-                    Check-In Guest
-                </button>
-            </center>
-        </form>
+    <div class="row">
+      <div class="w-50 col m-5">
+          <form action="#" method="post" id="check-guest-info">
+            {% crsftoken %}
+              <center>
+              <video id="preview" class='' width=300 height=200></video>
+              </center>
+              <div class="form-group">
+                  <label for="id">Scan the QR Code:</label>
+                  <input type="text" name="uid" id="uid" class="form-control" />
+                  <small class="form-text text-muted">
+                      Scan the QR code to get the information about guest to
+                      confirm.
+                  </small>
+              </div>
+              <center>
+                  <button type="submit" class="btn btn-success">
+                      Check-In Guest
+                  </button>
+              </center>
+          </form>
+      </div>
+      <div class="card info-card w-50 col m-5">
+          <div class="card-header">
+              Guest Info:
+          </div>
+          {% if guestpass %}
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                  Name:
+                  <p id="guest-name">{{ guestpass.guestname }}</p>
+              </li>
+              <li class="list-group-item">
+                  Guest Of :
+                  <p id="guest-of-name">{{ guestpass.guest_of.name}} - {{ guestpass.guest_of.student_class}}</p>
+              </li>
+              <li class="list-group-item">
+                  Email ID of guest:
+                  <p id="guest-email">{{ guestpass.email}}</p>
+              </li>
+            </ul>
+          {% else %}
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                  Name:
+                  <p id="guest-name">---</p>
+              </li>
+              <li class="list-group-item">
+                  Guest Of :
+                  <p id="guest-of-name">---</p>
+              </li>
+              <li class="list-group-item">
+                  Email ID of guest:
+                  <p id="guest-email">---</p>
+              </li>
+            </ul>
+          {% endif %}
+      </div>
     </div>
-    <div class="card info-card w-50 mx-auto m-5">
-        <div class="card-header">
-            Guest Info:
+    {% if error %}
+    <center>
+        <div class="alert alert-danger" role="alert">
+            {{error}}
         </div>
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item">
-                Name:
-                <p id="guest-name">Name Comes Here</p>
-            </li>
-            <li class="list-group-item">
-                Guest Of :
-                <p id="guest-of-name">Guest Of Name Comes Here</p>
-            </li>
-            <li class="list-group-item">
-                Email ID of guest:
-                <p id="guest-email">Email Comes Here</p>
-            </li>
-        </ul>
-        {% if error %}
-        <center>
-            <div class="alert alert-danger" role="alert">
-                {{error}}
-            </div>
-        </center>
-        {% endif %}
-            </div>
-            <h1> SCANNER </h1>
-            <h1 id='scan_output'> Current code <p ></p> </h1>
+    </center>
+    {% endif %}
     <script type="text/javascript" src="https://rawcdn.githack.com/tobiasmuehl/instascan/4224451c49a701c04de7d0de5ef356dc1f701a93/bin/instascan.min.js"></script>
-        <script type="text/javascript">
-          let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
-          scanner.addListener('scan', function (content) {
-            document.getElementById("id").value = content;
-            document.getElementById('preview').classList.add("success_item");
-            console.log(content);
-          });
-          Instascan.Camera.getCameras().then(function (cameras) {
-            if (cameras.length > 0) {
-              scanner.start(cameras[0]);
-            } else {
-              console.error('No cameras found.');
-            }
-          }).catch(function (e) {
-            console.error(e);
-          });
-        </script>
+    <script type="text/javascript">
+      let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
+      scanner.addListener('scan', function (content) {
+        document.getElementById("uid").value = content;
+        document.getElementById('preview').classList.add("success_item");
+        console.log(content);
+      });
+      Instascan.Camera.getCameras().then(function (cameras) {
+        if (cameras.length > 0) {
+          scanner.start(cameras[0]);
+        } else {
+          console.error('No cameras found.');
+        }
+      }).catch(function (e) {
+        console.error(e);
+      });
+
+      
+
+
+    </script>
 
 {% endblock content %}
 

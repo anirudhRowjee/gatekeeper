@@ -8,6 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import send_mail, EmailMessage
 from django.conf import settings
 
+
 def normalize_students(queryset):
     # function to accept queryset and convert to JSON
     return {str(student): str(student.unique_id) for student in queryset}
@@ -16,6 +17,7 @@ def normalize_students(queryset):
 def normalize_dates(queryset):
     # function to accept queryset and convert to JSON
     return {str(date.date_name): str(date.id) for date in queryset}
+
 
 def sendpass(guestpass):
     template = '''
@@ -26,6 +28,8 @@ def sendpass(guestpass):
             <h2> GUEST PASS FOR {event} </h2>
             <h3 style='color:red;'> ( VALID ONLY FOR {event.date} ) </h3>
             <h2> PASS CATEGORY {category} </h2>
+            <h2> GUEST NAME : {guestname} </h2>
+            <h2> GUEST OF : {guestofname} - {guestofclass} </h2>
             <h2> PASSCODE {passcode} </h2>
             <h3> PLEASE FIND THE PASS ATTACHED BELOW. KEEP THIS IMAGE SAFE </h3>
             <h3> PRESENT THIS CODE AT THE ENTRY GATE TO BE ADMITTED. </h3>
@@ -33,15 +37,25 @@ def sendpass(guestpass):
         </body>
     </html>
     '''
-    subject = 'GUEST PASS {passcode} - FIS ANNUAL DAY'.format(passcode=guestpass.barcode.uid)
+    subject = 'GUEST PASS {passcode} - FIS ANNUAL DAY'.format(
+        passcode=guestpass.barcode.uid)
     message = ''
 
     email_from = settings.EMAIL_HOST_USER
-    recipient_list = [guestpass.email,]
-    barcode_url = 'media/media/barcodes/barcodes_staging/{}.png'.format(str(guestpass.barcode.uid)) 
-    final_message = template.format(passcode=guestpass.barcode.uid, barcode_url=barcode_url, 
-                                    event=guestpass.date_valid, category=guestpass.category)
-    test_mail = EmailMessage( subject, final_message, email_from, recipient_list ) 
+    recipient_list = [guestpass.email, ]
+    barcode_url = 'media/media/barcodes/barcodes_staging/{}.png'.format(
+        str(guestpass.barcode.uid))
+    final_message = template.format(
+        passcode=guestpass.barcode.uid,
+        barcode_url=barcode_url,
+        event=guestpass.date_valid,
+        category=guestpass.category,
+        guestname=guestpass.guestname,
+        guestofname=guestpass.guest_of.name,
+        guestofclass=guestpass.guest_of.student_class
+    )
+    test_mail = EmailMessage(subject, final_message,
+                             email_from, recipient_list)
     test_mail.content_subtype = 'html'
     test_mail.attach_file(barcode_url)
     test_mail.send(fail_silently=False)
@@ -66,7 +80,7 @@ def register(request):
             category_obj = passes.category.objects.get(id=category)
             # generate barcode object
             new_barcode = utils.barcode(
-                uid = helpers.gen_UID()
+                uid=helpers.gen_UID()
             )
             new_barcode.save()
             new_barcode.set_barcode_image()
@@ -78,12 +92,12 @@ def register(request):
                 guest_of=student_new,
                 barcode=new_barcode,
                 category=category_obj,
-                paid = paid,
+                paid=paid,
             )
             new_pass.save()
         except ObjectDoesNotExist:
             error = "Student/Event doesnt exist. Choose the right options"
-            return render(request, 'passes/register.html', {'message': error, 'status':'OK'})
+            return render(request, 'passes/register.html', {'message': error, 'status': 'OK'})
 
         message = {'type': 'success or fail', 'message': 'what happened'}
         students = student.student.objects.all()
@@ -93,9 +107,9 @@ def register(request):
         sendpass(new_pass)
         categories = passes.category.objects.all()
         return render(request, 'passes/register.html', {'dates': dates, 'students': students,
-            'status':'OK', 'message': "New pass {pass_meta} generated".format(pass_meta=str(new_pass)),
-            'categories':categories,
-        })
+                                                        'status': 'OK', 'message': "New pass {pass_meta} generated".format(pass_meta=str(new_pass)),
+                                                        'categories': categories,
+                                                        })
 
     else:
         # pack students for JS-based live search
@@ -108,7 +122,8 @@ def register(request):
         except:
             error = "Students/Events are empty."
             return render(request, 'passes/register.html', {'error': error})
-        return render(request, 'passes/register.html', {'dates': dates, 'students': students, 'categories':categories})
+        return render(request, 'passes/register.html', {'dates': dates, 'students': students, 'categories': categories})
+
 
 def validate(request):
     return render(request, 'passes/checkin.html')
