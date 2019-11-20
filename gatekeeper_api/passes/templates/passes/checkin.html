@@ -71,41 +71,46 @@
                   </small>
               </div>
               <center>
-                  <button type="submit" class="btn btn-success">
-                      Check-In Guest
+                  <button type="submit" class="btn btn-outline-success w-100">
+                      Validate Guest Pass
                   </button>
               </center>
           </form>
       </div>
       <div class="card info-card w-50 col m-5">
-          <div class="card-header">
-              Guest Info:
+          <div class="card-header mb-2">
+              <center> GUEST INFO </center>
           </div>
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item">
-                  Name:
-                  <p id="guest-name">---</p>
-                  QR Code UID:
-                  <p id="guest-uid">---</p>
-              </li>
-              <li class="list-group-item">
-                  Guest Of :
-                  <p id="guest-of-name">---</p>
-              </li>
-              <li class="list-group-item">
-                  Email ID of guest:
-                  <p id="guest-email">---</p>
-              </li>
-              <li class="list-group-item">
-                  <form id="check-guest">
-                      {% csrf_token %}
-                      <input name="checkinid" id="checkinid" type="text" hidden>
-                      <center><button class="btn" id="check-guest-btn" type="submit"></button></center>
-                  </form>
-              </li>
-            </ul>
+            <div class="col">
+                <br>
+                <div class="row">
+                    <p class="col font-weight-bold">NAME</p><p class="col" id="guest-name"></p>
+                </div>
+                <div class="row">
+                    <p class="col font-weight-bold">SECRET KEY</p><p class="col" id="guest-uid"></p>
+                </div>
+                <div class="row">
+                    <p class="col font-weight-bold">GUEST OF</p><p class="col" id="guest-of-name"></p>
+                </div>
+                <div class="row">
+                    <p class="col font-weight-bold">GUEST'S EMAIL</p><p class="col" id="guest-email"></p>
+                </div>
+                <div class="row">
+                    <p class="col font-weight-bold">PASS CATEGORY</p><p class="col" id="pass-category"></p>
+                </div>
+                <div class="row">
+                    <p class="col font-weight-bold">EVENT</p><p class="col" id="pass-event"></p>
+                </div>
+                <form id="check-guest">
+                    {% csrf_token %}
+                    <input name="checkinid" id="checkinid" type="text" hidden>
+                    <center><button class="btn" id="check-guest-btn" type="submit"></button></center>
+                </form>
+                <br>
+            </div>
       </div>
     </div>
+    <p class='hidden' hidden id='funkystuff'></p>
     {% if error %}
     <center>
         <div class="alert alert-danger" role="alert">
@@ -118,100 +123,88 @@
     
     <script type="text/javascript">
 
-
-    // get guest info on change of the UID input
-    $(document).on("change", "#uid", function(e) {
-      e.preventDefault();
-      console.log("changed"); 
-      $.ajax({
-          type:'POST',
-          url:'check',
-          data:{
-            uid: $('#uid').val(),
-            csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-          },
-          success:function(data){
-            if ('error' in data){
-                alert("GUEST NOT FOUND");
-            } else {
-                $('#guest-name').text(data.guestname);
-                $("#guest-uid").text(data.uid);
-                $('#guest-of-name').text(data.name);
-                $('#guest-email').text(data.email);
-                $('#checkinid').val(data.guest_id);
-                if (data.checked_in == false) {
-                    $('#check-guest-btn').addClass('btn-success').removeClass('btn-danger').text('CHECK IN');
+        function beltChange(e){
+            if( e != 'none'){
+                e.preventDefault();
+            };
+            console.log("changed"); 
+            $.ajax({
+                type:'POST',
+                url:'check',
+                data:{
+                uid: $('#uid').val(),
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+                },
+                success:function(data){
+                if ('error' in data){
+                    if (data.error == 'invalid'){
+                        console.log('invalid format for guest ID');
+                    }
+                    else{
+                        alert("GUEST NOT FOUND");
+                    }
                 } else {
-                    $('#check-guest-btn').addClass('btn-danger').removeClass('btn-success').text('CHECK OUT');
+                    $('#guest-name').text(data.guestpass.guestname);
+                    $("#guest-uid").text(data.uid);
+                    $('#guest-of-name').text(data.name);
+                    $('#guest-email').text(data.guestpass.email);
+                    $('#checkinid').val(data.guest_id);
+                    $('#pass-event').text(data.event);
+                    $('#pass-category').text(data.category.name).css('color', data.category.color);
+                    if (data.checked_in == false) {
+                        $('#check-guest-btn').addClass('btn-success').removeClass('btn-danger').text('CHECK IN');
+                    } else {
+                        $('#check-guest-btn').addClass('btn-danger').removeClass('btn-success').text('CHECK OUT');
+                    }
                 }
-            }
-          }
-        });
-      });
+                }
+            });
+        };
+        // get guest info on change of the UID input
+        $(document).on("change keyup paste", "#uid", function(e) {
+            beltChange(e);
+            });
 
 
-    // to get guest info upon submit 
-    $(document).on('submit', '#check-guest-info', function(e){
-        e.preventDefault();
+        // to get guest info upon submit 
+        $(document).on('submit', '#check-guest-info', function(e){
+            beltChange(e);
+            });
 
-        $.ajax({
-            type:'POST',
-            url:'check',
-            data:{
-              uid: $('#uid').val(),
-              csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-            },
-            success:function(data){
-              if ('error' in data){
-                  alert("GUEST NOT FOUND");
-              } else {
-                  $('#guest-name').text(data.guestname);
-                  $("#guest-uid").text(data.uid);
-                  $('#guest-of-name').text(data.name);
-                  $('#guest-email').text(data.email);
-                  $('#checkinid').val(data.guest_id);
-                  if (data.checked_in == false) {
-                      $('#check-guest-btn').addClass('btn-success').removeClass('btn-danger').text('CHECK IN');
-                  } else {
-                      $('#check-guest-btn').addClass('btn-danger').removeClass('btn-success').text('CHECK OUT');
-                  }
-              }
-            }
-        })
+            // to check in or check out guest based on submit
+            $(document).on('submit', '#check-guest', function(e){
+            e.preventDefault();
 
-      });
-    
-      // to check in or check out guest based on submit
-      $(document).on('submit', '#check-guest', function(e){
-        e.preventDefault();
+            $.ajax({
+                type:'POST',
+                url:'check',
+                data:{
+                    checkinid : $('input[name=checkinid]').val(),
+                    csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+                },
+                success:function(data){
+                    if (data.checked_in == false) {
+                        $('#check-guest-btn').addClass('btn-success').removeClass('btn-danger').text('CHECK IN');
+                    } else {
+                        $('#check-guest-btn').addClass('btn-danger').removeClass('btn-success').text('CHECK OUT');
+                    }
+                }
+            })
 
-        $.ajax({
-            type:'POST',
-            url:'check',
-            data:{
-              checkinid : $('input[name=checkinid]').val(),
-              csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-            },
-            success:function(data){
-              if (data.checked_in == false) {
-                  $('#check-guest-btn').addClass('btn-success').removeClass('btn-danger').text('CHECK IN');
-              } else {
-                  $('#check-guest-btn').addClass('btn-danger').removeClass('btn-success').text('CHECK OUT');
-              }
-            }
-        })
-
-      });
-      
-      
-
+            });
     </script>
-    <script type="text/javascript" src="https://rawcdn.githack.com/tobiasmuehl/instascan/4224451c49a701c04de7d0de5ef356dc1f701a93/bin/instascan.min.js"></script>
+
+    <script type="text/javascript" src="{% static 'assets/instascan.min.js' %}"></script>
     <script type="text/javascript">
       let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
       scanner.addListener('scan', function (content) {
         document.getElementById("uid").value = content;
+        document.getElementById("funkystuff").innerHTML = content;
         document.getElementById('preview').classList.add("success_item");
+        beltChange('none');
+        setTimeout(function(){
+            document.getElementById('preview').classList.remove("success_item");
+        }, 500);
         console.log(content);
       });
       Instascan.Camera.getCameras().then(function (cameras) {

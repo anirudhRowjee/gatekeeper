@@ -31,7 +31,7 @@ body {
 }
 
 .success_item {
-    border: 5px solid rgb(48, 255, 48);
+    border: 3px solid lightgreen;
 }
 
 .info-card {

@@ -32,7 +32,7 @@ class student(models.Model):
     student_class = models.CharField(max_length=10)
 
     def __str__(self):
-        return "{name} - {unique_id}".format(name=self.name, unique_id=self.unique_id)
+        return "{name} ({std_class}) - {unique_id}".format(name=self.name, unique_id=self.unique_id, std_class=self.student_class)
 
 
 class StudentAdder(models.Model):

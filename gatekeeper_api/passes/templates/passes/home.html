@@ -67,8 +67,8 @@
                     required
                 >
                     {% for searchstr, guest in guests.items %}
-                    <option value="{{guest.id}}">
-                        {{ guest.id }} -- {{ searchstr }} guest of {{guest.guest_of }}
+                    <option class='search_student_option' value="{{guest.id}}">
+                        {{ guest.id }} - {{ searchstr }} guest of {{guest.guest_of }}
                     </option>
                     {% endfor %}
                 </select>
@@ -121,7 +121,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 <script type="text/javascript">
-    $(document).on("change", "#guest", function(e) {
+    $(document).on("click", ".search_student_option", function(e) {
         e.preventDefault();
         console.log("changed");
         $.ajax({

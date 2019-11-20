@@ -24,7 +24,7 @@ def normalize_dates(queryset):
 
 def normalize_guests(queryset):
     # function to accept queryset and convert to JSON
-    return {str(guest.guestname): {'id': str(guest.id), 'guest_of': str(guest.guest_of.name)} for guest in queryset}
+    return {str(guest.guestname): {'id': str(guest.id), 'guest_of': str(guest.guest_of)} for guest in queryset}
 
 
 def sendpass(guestpass):
@@ -35,18 +35,19 @@ def sendpass(guestpass):
             <h1> FREEDOM INTERNATIONAL SCHOOL </h1>
             <h2> GUEST PASS FOR {event} </h2>
             <h3 style='color:red;'> ( VALID ONLY FOR {event.date} ) </h3>
-            <h2> PASS CATEGORY {category} </h2>
+            <h2> PASS CATEGORY :<div style='background-color:{passcolor};'> {category} </div> </h2>
             <h2> GUEST NAME : {guestname} </h2>
-            <h2> GUEST OF : {guestofname} - {guestofclass} </h2>
-            <h2> PASSCODE {passcode} </h2>
-            <h3> PLEASE FIND THE PASS ATTACHED BELOW. KEEP THIS IMAGE SAFE </h3>
-            <h3> PRESENT THIS CODE AT THE ENTRY GATE TO BE ADMITTED. </h3>
+            <h2> GUEST OF : {guest_student}</h2>
+            <h2> PASSCODE : {passcode} </h2>
+            <h3 style='color:red;'> PLEASE FIND THE PASS ATTACHED BELOW. KEEP THIS IMAGE SAFE </h3>
+            <h3 style='color:red;'> PRESENT THIS CODE AT THE ENTRY GATE TO BE ADMITTED. </h3>
         </center>
         </body>
     </html>
     '''
-    subject = 'GUEST PASS {passcode} - FIS ANNUAL DAY'.format(
-        passcode=guestpass.barcode.uid)
+    subject = 'GUEST PASS {passcode} - FIS {event}'.format(
+        passcode=guestpass.barcode.uid,
+        event=guestpass.date_valid.date_name,)
     message = ''
 
     email_from = settings.EMAIL_HOST_USER
@@ -59,8 +60,8 @@ def sendpass(guestpass):
         event=guestpass.date_valid,
         category=guestpass.category,
         guestname=guestpass.guestname,
-        guestofname=guestpass.guest_of.name,
-        guestofclass=guestpass.guest_of.student_class
+        guest_student = str(guestpass.guest_of),
+        passcolor = guestpass.category.color,
     )
     test_mail = EmailMessage(subject, final_message,
                              email_from, recipient_list)
@@ -143,16 +144,21 @@ def get_guest_info(request):
         if 'uid' in request.POST.keys():
             try:
                 uid = request.POST['uid']
+                if uid == '' or len(uid) != 12 or uid.isalpha() or uid.isdigit() :
+                    return JsonResponse({'error':'invalid'})
                 print(uid)
                 barcode = utils.barcode.objects.get(
                     uid=uid)
                 guestpass = passes.guestPass.objects.get(barcode=barcode)
                 student_id = guestpass.guest_of.id
                 studentdata = student.student.objects.get(id=student_id)
+                pass_category = model_to_dict(guestpass.category)
                 data = model_to_dict(studentdata)
-                data.update(model_to_dict(guestpass))
+                #data.update(model_to_dict(guestpass))
                 data.update({'uid': guestpass.barcode.uid,
-                             'guest_id': guestpass.id})
+                            'guest_of': str(guestpass.guest_of), 'guestpass':model_to_dict(guestpass),
+                            'event': str(guestpass.date_valid),
+                             'guest_id': guestpass.id, 'category':pass_category})
                 print(data)
                 return JsonResponse(data)
             except:
@@ -185,5 +191,5 @@ def home(request):
         return JsonResponse(data)
     else:
         guests = normalize_guests(passes.guestPass.objects.all())
-        print("\n\n\n\n\n\n", guests, "\n\n\n\n\n\n")
+        print(guests)
         return render(request, 'passes/home.html', {'guests': guests})
