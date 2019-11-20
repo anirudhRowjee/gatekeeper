@@ -1,0 +1,131 @@
+{% extends "base.html" %} {% load static %} {% block navbar %}
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+    <a class="navbar-brand text-logo" href="#"> GATEKEEPER </a>
+    <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+    >
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="#">
+                    Home <span class="sr-only">(current)</span></a
+                >
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#"> Register </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#"> Validate </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#"> Dates </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#"> Students </a>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+            <button class="btn btn-danger my-2 my-sm-0" type="submit">
+                logout
+            </button>
+        </form>
+    </div>
+</nav>
+{% endblock navbar %} {% block content %}
+
+<div class="">
+    <div class="mx-auto m-3">
+        <center><p class="header">Guest Info</p></center>
+    </div>
+</div>
+<div class="">
+    <div class="mx-auto w-50 m-5">
+        <form id="search-guest">
+            {% csrf_token %}
+            <div class="input-group">
+                <select name="guest" id="guest" class="form-control selectpicker" data-live-search="true" required>
+                    {% for searchstr, guest in guests.items %}
+                        <option value="{{guest.id}}"> {{ guest.id }} -- {{ searchstr }} guest of {{ guest.guest_of }} </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </form>
+    </div>
+    
+    <div class="card info-card mx-auto m-5">
+        <div class="card-header">
+            Guest Info:
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                Name:
+                <p id="guest-name">---</p>
+                QR Code UID:
+                <p id="guest-uid">---</p>
+            </li>
+            <li class="list-group-item">
+                Guest Of :
+                <p id="guest-of-name">---</p>
+                Class:
+                <p id="guest-of-class">---</p>
+            </li>
+            <li class="list-group-item">
+                Email ID of guest:
+                <p id="guest-email">---</p>
+            </li>
+            <li class="list-group-item">
+                Payment Status
+                <p id="payment">---</p>
+            </li>
+            <li class="list-group-item">
+                Checked-In Status
+                <p id="checked_in">---</p>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="row">
+    {% if error %}
+    <center>
+        <div class="alert alert-danger" role="alert">
+            {{error}}
+        </div>
+    </center>
+    {% endif %}
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+    $(document).on("change", "#guest", function(e) {
+        e.preventDefault();
+        console.log("changed");
+        $.ajax({
+            type: "POST",
+            url: "",
+            data: {
+                guest: $("#guest").val(),
+                csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+            },
+            success: function(data) {
+                $("#guest-name").text(data.guestname);
+                $("#guest-uid").text(data.uid);
+                $("#guest-of-name").text(data.name);
+                $("#guest-of-class").text(data.student_class);
+                $("#guest-email").text(data.email);
+                $("#payment").text(data.paid);
+                $("#checked_in").text(data.checked_in);
+            }
+        });
+    });
+</script>
+{% endblock content %}

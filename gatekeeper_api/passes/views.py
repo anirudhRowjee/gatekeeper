@@ -22,6 +22,11 @@ def normalize_dates(queryset):
     return {str(date.date_name): str(date.id) for date in queryset}
 
 
+def normalize_guests(queryset):
+    # function to accept queryset and convert to JSON
+    return {str(guest.guestname): {'id': str(guest.id), 'guest_of': str(guest.guest_of.name)} for guest in queryset}
+
+
 def sendpass(guestpass):
     template = '''
     <html>
@@ -134,14 +139,51 @@ def validate(request):
 
 def get_guest_info(request):
     if request.method == "POST":
-        uid = request.POST['uid']
-        print(uid)
-        barcode = utils.barcode.objects.get(
-            uid=uid)
-        guestpass = passes.guestPass.objects.get(barcode=barcode)
-        student_id = guestpass.guest_of.id
+        print(request.POST)
+        if 'uid' in request.POST.keys():
+            try:
+                uid = request.POST['uid']
+                print(uid)
+                barcode = utils.barcode.objects.get(
+                    uid=uid)
+                guestpass = passes.guestPass.objects.get(barcode=barcode)
+                student_id = guestpass.guest_of.id
+                studentdata = student.student.objects.get(id=student_id)
+                data = model_to_dict(studentdata)
+                data.update(model_to_dict(guestpass))
+                data.update({'uid': guestpass.barcode.uid,
+                             'guest_id': guestpass.id})
+                print(data)
+                return JsonResponse(data)
+            except:
+                return JsonResponse({'error': 'QR CODE DOESNT EXIST'})
+        elif 'checkinid' in request.POST.keys():
+            guest_id = request.POST['checkinid']
+            print(guest_id)
+            guestpass = passes.guestPass.objects.get(id=guest_id)
+            if guestpass.checked_in == True:
+                # guest has already checked in
+                guestpass.checked_in = False
+                guestpass.save()
+            else:
+                # guest has checked out
+                guestpass.checked_in = True
+                guestpass.save()
+            # sending back checked_in data
+            return JsonResponse({'checked_in': guestpass.checked_in})
+
+
+def home(request):
+    if request.method == "POST":
+        guest_id = request.POST['guest']
+        guest_obj = passes.guestPass.objects.get(id=guest_id)
+        data = model_to_dict(guest_obj)
+        student_id = guest_obj.guest_of.id
         studentdata = student.student.objects.get(id=student_id)
-        data = model_to_dict(studentdata)
-        data.update(model_to_dict(guestpass))
-        print(data)
+        data.update(model_to_dict(studentdata))
+        data.update({'uid': guest_obj.barcode.uid, 'guest_id': guest_id.id})
         return JsonResponse(data)
+    else:
+        guests = normalize_guests(passes.guestPass.objects.all())
+        print("\n\n\n\n\n\n", guests, "\n\n\n\n\n\n")
+        return render(request, 'passes/home.html', {'guests': guests})
