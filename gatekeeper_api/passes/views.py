@@ -181,7 +181,7 @@ def home(request):
         student_id = guest_obj.guest_of.id
         studentdata = student.student.objects.get(id=student_id)
         data.update(model_to_dict(studentdata))
-        data.update({'uid': guest_obj.barcode.uid, 'guest_id': guest_id.id})
+        data.update({'uid': guest_obj.barcode.uid, 'guest_id': guest_obj.id})
         return JsonResponse(data)
     else:
         guests = normalize_guests(passes.guestPass.objects.all())

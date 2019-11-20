@@ -1,5 +1,4 @@
-{% extends "base.html" %}
-
+{% extends "base.html" %} 
 {% block navbar %}
 <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
     <a class="navbar-brand text-logo" href="#"> GATEKEEPER </a>
@@ -18,21 +17,25 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="{% url 'home' %}">
                     Home <span class="sr-only">(current)</span></a
                 >
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="{% url 'pass_register' %}"> Register </a>
+                <a class="nav-link" href="{% url 'register_pass' %}">
+                    Register
+                </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#"> Validate </a>
+                <a class="nav-link" href="{% url 'validate' %}"> Validate </a>
             </li>
-            <li class="nav-item " >
+            <li class="nav-item ">
                 <a class="nav-link" href="{% url 'addevent' %}"> Dates </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'addstudents' %}"> Students </a>
+                <a class="nav-link" href="{% url 'addstudents' %}">
+                    Students
+                </a>
             </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">
@@ -42,93 +45,123 @@
         </form>
     </div>
 </nav>
-{% endblock navbar %}
-
+{% endblock navbar %} 
 {% block content %}
-    <div class="mx-auto m-2">
-        <center><h3 class='header'> REGISTER </h3> </center>
+<div class="mx-auto m-2">
+    <center><h3 class="header">REGISTER</h3></center>
+</div>
+
+{% if message %} 
+{% if status == 'OK' %}
+<center>
+    <div
+        class="alert alert-dismissable alert-success"
+        id="alert-spec"
+        role="alert"
+    >
+        <a href="#" class="close" data-dismiss="alert">&times;</a>
+        {{ message }}
     </div>
-
-
-        {% if message %}
-        {% if status == 'OK' %}
-        <center>
-            <div class="alert alert-dismissable alert-success" id='alert-spec' role="alert">
-                <a href="#" class="close"  data-dismiss="alert">&times;</a>
-                {{ message }}
-            </div>
-        </center>
-        {% elif status == 'NO' %}
-        <center>
-            <div class="alert alert-dismissable alert-danger" id='alert_spec' role="alert">
-                <a href="#" class="close"  data-dismiss="alert">&times;</a>
-                {{ message }}
-            </div>
-        </center>
-        {% endif %}
-        {% endif %}
-
-    <div class="register-form w-50 mx-auto">
-        <form action="#" class='custom-form' method="post">
-            {% csrf_token %}
-            <center><h3 class="form-text"> New Guest Pass </h3></center>
-            <div class="form-group">
-                <label for="name"> Guest Name:</label>
-                <input type="text" name="name" id="name" class="form-control" required/>
-            </div>
-            <div class="form-group">
-                <label for="email"> Guest Email ID:</label>
-                <input
-                    type="email"
-                    name="email"
-                    id="email"
-                    class="form-control"
-                    required
-                />
-            </div>
-            <div class="form-group">
-                <label for="admission-no">Guest Of Student :</label>
-                <select name="uid" id="admission-no" class="form-control selectpicker" data-live-search="true" required>
-                  {% for searchstr, student in students.items %}
-                    <option value="{{student}}"> {{ searchstr }} </option>
-                  {% endfor %}
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="event-date">Event:</label>
-                <select name="event-date" id="event-date" class="form-control" required>
-                  {% for datename, dateid in dates.items %}
-                  <option value="{{dateid}}">{{datename}}</option>
-                  {% endfor %}
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="category"> Pass Category</label>
-                <select name="category" id="category" class="form-control" required>
-                  {% for category in categories %}
-                  <option value="{{ category.id }}">{{ category.name }}</option>
-                  {% endfor %}
-                </select>
-            </div>
-             <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="exampleCheck1" name='paid' value='paid'>
-                <label class="form-check-label" for="exampleCheck1"> Guest Has Paid </label>
-              </div>
-            <center>
-                <button type="submit btn-block" class="btn btn-outline-success m-3">
-                    Register Guest Pass
-                </button>
-            </center>
-        </form>
+</center>
+{% elif status == 'NO' %}
+<center>
+    <div
+        class="alert alert-dismissable alert-danger"
+        id="alert_spec"
+        role="alert"
+    >
+        <a href="#" class="close" data-dismiss="alert">&times;</a>
+        {{ message }}
     </div>
-{% endblock content %}
+</center>
+{% endif %} 
+{% endif %}
 
+<div class="register-form w-50 mx-auto">
+    <form action="#" class="custom-form" method="post">
+        {% csrf_token %}
+        <center><h3 class="form-text">New Guest Pass</h3></center>
+        <div class="form-group">
+            <label for="name"> Guest Name:</label>
+            <input
+                type="text"
+                name="name"
+                id="name"
+                class="form-control"
+                required
+            />
+        </div>
+        <div class="form-group">
+            <label for="email"> Guest Email ID:</label>
+            <input
+                type="email"
+                name="email"
+                id="email"
+                class="form-control"
+                required
+            />
+        </div>
+        <div class="form-group">
+            <label for="admission-no">Guest Of Student :</label>
+            <select
+                name="uid"
+                id="admission-no"
+                class="form-control selectpicker"
+                data-live-search="true"
+                required
+            >
+                {% for searchstr, student in students.items %}
+                <option value="{{student}}"> {{ searchstr }} </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="event-date">Event:</label>
+            <select
+                name="event-date"
+                id="event-date"
+                class="form-control"
+                required
+            >
+                {% for datename, dateid in dates.items %}
+                <option value="{{dateid}}">{{datename}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="category"> Pass Category</label>
+            <select name="category" id="category" class="form-control" required>
+                {% for category in categories %}
+                <option value="{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-check">
+            <input
+                type="checkbox"
+                class="form-check-input"
+                id="exampleCheck1"
+                name="paid"
+                value="paid"
+            />
+            <label class="form-check-label" for="exampleCheck1">
+                Guest Has Paid
+            </label>
+        </div>
+        <center>
+            <button type="submit btn-block" class="btn btn-outline-success m-3">
+                Register Guest Pass
+            </button>
+        </center>
+    </form>
+</div>
+{% endblock content %} 
 {% block script %}
 <script>
-$(document).ready(function(){
-  $(".close").click(function(){
-    $("#alert_spec").alert("close");
-  });
-});
+    $(document).ready(function() {
+        $(".close").click(function() {
+            $("#alert_spec").alert("close");
+        });
+    });
 </script>
 {% endblock script %}
