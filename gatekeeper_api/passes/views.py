@@ -140,7 +140,6 @@ def validate(request):
 
 def get_guest_info(request):
     if request.method == "POST":
-        print(request.POST)
         if 'uid' in request.POST.keys():
             try:
                 uid = request.POST['uid']
@@ -159,7 +158,6 @@ def get_guest_info(request):
                             'guest_of': str(guestpass.guest_of), 'guestpass':model_to_dict(guestpass),
                             'event': str(guestpass.date_valid),
                              'guest_id': guestpass.id, 'category':pass_category})
-                print(data)
                 return JsonResponse(data)
             except:
                 return JsonResponse({'error': 'QR CODE DOESNT EXIST'})
@@ -191,5 +189,4 @@ def home(request):
         return JsonResponse(data)
     else:
         guests = normalize_guests(passes.guestPass.objects.all())
-        print(guests)
         return render(request, 'passes/home.html', {'guests': guests})

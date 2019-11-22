@@ -119,7 +119,7 @@
     </center>
     {% endif %}
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="{% static 'assets/jquery.min.js' %}"></script>
     
     <script type="text/javascript">
 
@@ -144,6 +144,7 @@
                         alert("GUEST NOT FOUND");
                     }
                 } else {
+                    console.log(data);
                     $('#guest-name').text(data.guestpass.guestname);
                     $("#guest-uid").text(data.uid);
                     $('#guest-of-name').text(data.name);
@@ -151,7 +152,7 @@
                     $('#checkinid').val(data.guest_id);
                     $('#pass-event').text(data.event);
                     $('#pass-category').text(data.category.name).css('color', data.category.color);
-                    if (data.checked_in == false) {
+                    if (data.guestpass.checked_in == false) {
                         $('#check-guest-btn').addClass('btn-success').removeClass('btn-danger').text('CHECK IN');
                     } else {
                         $('#check-guest-btn').addClass('btn-danger').removeClass('btn-success').text('CHECK OUT');
@@ -161,7 +162,7 @@
             });
         };
         // get guest info on change of the UID input
-        $(document).on("change keyup paste", "#uid", function(e) {
+        $(document).on("change keyup", "#uid", function(e) {
             beltChange(e);
             });
 

@@ -1,4 +1,5 @@
 {% extends "base.html" %} 
+{% load static %}
 {% block navbar %}
 <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
     <a class="navbar-brand text-logo" href="#"> GATEKEEPER </a>
@@ -156,12 +157,13 @@
     </form>
 </div>
 {% endblock content %} 
+
 {% block script %}
-<script>
-    $(document).ready(function() {
-        $(".close").click(function() {
-            $("#alert_spec").alert("close");
+    <script>
+        $(document).ready(function() {
+            $(".close").click(function() {
+                $("#alert_spec").alert("close");
+            });
         });
-    });
-</script>
+    </script>
 {% endblock script %}
